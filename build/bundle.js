@@ -563,27 +563,75 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
-const toggleTodo = todo => {
-    return _extends({}, todo, {
-        completed: !todo.completed
-    });
+const todos = (state = [], action) => {
+    switch (action.type) {
+        case 'ADD_TODO':
+            return [...state, {
+                id: action.id,
+                text: action.text,
+                completed: false
+            }];
+        case 'TOGGLE_TODO':
+            return state.map(todo => {
+                if (todo.id !== action.id) {
+                    return todo;
+                }
+                return _extends({}, todo, {
+                    completed: !todo.completed
+                });
+            });
+        default:
+            return state;
+    }
 };
 
-const testToggleTodo = () => {
-    const todoBefore = {
+const testAddTodo = () => {
+    const stateBefore = [];
+    const action = {
+        type: 'ADD_TODO',
+        id: 0,
+        text: 'Learn Redux'
+    };
+    const stateAfter = [{
         id: 0,
         text: 'Learn Redux',
         completed: false
-    };
-    const todoAfter = {
-        id: 0,
-        text: 'Learn Redux',
-        completed: true
-    };
-    __WEBPACK_IMPORTED_MODULE_2_deep_freeze___default()(todoBefore);
-    __WEBPACK_IMPORTED_MODULE_0_expect___default()(toggleTodo(todoBefore)).toEqual(todoAfter);
+    }];
+    __WEBPACK_IMPORTED_MODULE_2_deep_freeze___default()(stateBefore);
+    __WEBPACK_IMPORTED_MODULE_2_deep_freeze___default()(stateAfter);
+
+    __WEBPACK_IMPORTED_MODULE_0_expect___default()(todos(stateBefore, action)).toEqual(stateAfter);
 };
 
+const testToggleTodo = () => {
+    const stateBefore = [{
+        id: 0,
+        text: 'Learn Redux',
+        completed: false
+    }, {
+        id: 1,
+        text: 'Go dying',
+        completed: false
+    }];
+    const action = {
+        type: 'TOGGLE_TODO',
+        id: 1
+    };
+    const stateAfter = [{
+        id: 0,
+        text: 'Learn Redux',
+        completed: false
+    }, {
+        id: 1,
+        text: 'Go dying',
+        completed: true
+    }];
+    __WEBPACK_IMPORTED_MODULE_2_deep_freeze___default()(stateBefore);
+    __WEBPACK_IMPORTED_MODULE_2_deep_freeze___default()(action);
+    __WEBPACK_IMPORTED_MODULE_0_expect___default()(todos(stateBefore, action)).toEqual(stateAfter);
+};
+
+testAddTodo();
 testToggleTodo();
 console.log('All tests passed');
 
