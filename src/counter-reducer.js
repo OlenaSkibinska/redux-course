@@ -1,5 +1,5 @@
 import expect from 'expect';
-import {createStore} from 'redux';
+// import {createStore} from 'redux';
 
 const counter = (state = 0, action) => {
 
@@ -13,6 +13,30 @@ const counter = (state = 0, action) => {
     }
 
 };
+
+const createStore = (reducer) =>{
+    let state;
+    let listeners = [];
+
+    const getState = () => state;
+
+    const dispatch = (action) =>{
+        state = reducer(state, action);
+        listeners.forEach(listener => listener()); //calling every listeners to notify about changes.
+    };
+
+    const subscribe = (listener) =>{
+        listeners.push(listener); //any time the subscribe is called, new listener is pushed into the array.
+        return () => {
+            listeners = listeners.filter(l => l !== listener) //removes listener from the array.
+        }
+    };
+    dispatch({});
+
+    return { getState, dispatch, subscribe};
+};
+
+
 const store = createStore(counter);
 const render = () =>{
     document.body.innerText = store.getState();
