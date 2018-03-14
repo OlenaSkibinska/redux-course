@@ -565,6 +565,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
+
 const todo = (state, action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -606,14 +607,25 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
     }
 };
 
-const todoApp = (state = {}, action) => {
-    return {
-        todos: todos(state.todos, action),
-        visibilityFilter: visibilityFilter(state.visibilityFilter, action)
-    };
-};
+const todoApp = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["a" /* combineReducers */])({
+    todos,
+    visibilityFilter
+});
 
-const store = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["a" /* createStore */])(todoApp);
+// const todoApp = (state = {}, action) => {
+//   return {
+//       todos: todos(
+//           state.todos,
+//           action
+//       ),
+//       visibilityFilter: visibilityFilter(
+//           state.visibilityFilter,
+//           action
+//       )
+//   };
+// };
+
+const store = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["b" /* createStore */])(todoApp);
 
 console.log('Initial state:');
 console.log(store.getState());
@@ -16894,8 +16906,8 @@ function compose() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__applyMiddleware__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__compose__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warning__ = __webpack_require__(18);
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["b"]; });
-/* unused harmony reexport combineReducers */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__createStore__["b"]; });
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__combineReducers__["a"]; });
 /* unused harmony reexport bindActionCreators */
 /* unused harmony reexport applyMiddleware */
 /* unused harmony reexport compose */
@@ -17229,7 +17241,7 @@ function symbolObservablePonyfill(root) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {/* unused harmony export default */
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony export (immutable) */ __webpack_exports__["a"] = combineReducers;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createStore__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_es_isPlainObject__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warning__ = __webpack_require__(18);
