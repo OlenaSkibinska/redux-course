@@ -635,13 +635,12 @@ const store = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["b" /* createStore */])
 
 let nextTodoId = 0;
 
-const FilterLink = ({
-    filter,
-    currentFilter,
+const Link = ({
+    active,
     children,
     onClick
 }) => {
-    if (filter === currentFilter) {
+    if (active) {
         return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
             'span',
             null,
@@ -653,17 +652,39 @@ const FilterLink = ({
         { href: '#',
             onClick: e => {
                 e.preventDefault();
-                onClick(filter);
+                onClick();
             }
         },
         children
     );
 };
 
-const Footer = ({
-    visibilityFilter,
-    onFilterClick
-}) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+class FilterLink extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
+    componentDidMount() {
+        store.subscribe(() => this.forceUpdate());
+    }
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+    render() {
+        const props = this.props;
+        const state = store.getState();
+
+        return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+            Link,
+            {
+                active: props.filter === state.visibilityFilter,
+                onClick: () => store.dispatch({
+                    type: 'SET_VISIBILITY_FILTER',
+                    filter: props.filter
+                })
+            },
+            props.children
+        );
+    }
+}
+
+const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
     'p',
     null,
     'Show:',
@@ -671,9 +692,7 @@ const Footer = ({
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_ALL',
-            currentFilter: visibilityFilter,
-            onClick: onFilterClick
+            filter: 'SHOW_ALL'
         },
         'All,'
     ),
@@ -681,9 +700,7 @@ const Footer = ({
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_ACTIVE',
-            currentFilter: visibilityFilter,
-            onClick: onFilterClick
+            filter: 'SHOW_ACTIVE'
         },
         'Active,'
     ),
@@ -691,9 +708,7 @@ const Footer = ({
     __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
         FilterLink,
         {
-            filter: 'SHOW_COMPLETED',
-            currentFilter: visibilityFilter,
-            onClick: onFilterClick
+            filter: 'SHOW_COMPLETED'
         },
         'Completed'
     )
@@ -777,13 +792,7 @@ const TodoApp = ({
             type: 'TOGGLE_TODO',
             id
         }) }),
-    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, {
-        visibilityFilter: visibilityFilter,
-        onFilterClick: filter => store.dispatch({
-            type: 'SET_VISIBILITY_FILTER',
-            filter
-        })
-    })
+    __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Footer, null)
 );
 
 const render = () => {
