@@ -635,8 +635,51 @@ const store = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["b" /* createStore */])
 
 let nextTodoId = 0;
 
+const FilterLink = ({
+    filter,
+    currentFilter,
+    children
+}) => {
+    if (filter === currentFilter) {
+        return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+            'span',
+            null,
+            children
+        );
+    }
+    return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+        'a',
+        { href: '#',
+            onClick: e => {
+                e.preventDefault();
+                store.dispatch({
+                    type: 'SET_VISIBILITY_FILTER',
+                    filter
+                });
+            }
+        },
+        children
+    );
+};
+
+const getVisibleTodos = (todos, filter) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_COMPLETED':
+            return todos.filter(t => t.completed);
+        case 'SHOW_ACTIVE':
+            return todos.filter(t => !t.completed);
+    }
+};
+
 class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
     render() {
+        const {
+            todos,
+            visibilityFilter
+        } = this.props;
+        const visibleTodos = getVisibleTodos(todos, visibilityFilter);
         return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
             'div',
             null,
@@ -658,7 +701,7 @@ class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
             __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
                 'ul',
                 null,
-                this.props.todos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+                visibleTodos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
                     'li',
                     { key: todo.id,
                         onClick: () => {
@@ -672,15 +715,47 @@ class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
                         } },
                     todo.text
                 ))
+            ),
+            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+                'p',
+                null,
+                'Show:',
+                ' ',
+                __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+                    FilterLink,
+                    {
+                        filter: 'SHOW_ALL',
+                        currentFilter: visibilityFilter
+                    },
+                    'All,'
+                ),
+                ' ',
+                __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+                    FilterLink,
+                    {
+                        filter: 'SHOW_ACTIVE',
+                        currentFilter: visibilityFilter
+
+                    },
+                    'Active,'
+                ),
+                ' ',
+                __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+                    FilterLink,
+                    {
+                        filter: 'SHOW_COMPLETED',
+                        currentFilter: visibilityFilter
+
+                    },
+                    'Completed'
+                )
             )
         );
     }
 }
 
 const render = () => {
-    __WEBPACK_IMPORTED_MODULE_4_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoApp, {
-        todos: store.getState().todos
-    }), document.getElementById('root'));
+    __WEBPACK_IMPORTED_MODULE_4_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoApp, store.getState()), document.getElementById('root'));
 };
 
 store.subscribe(render);
