@@ -660,7 +660,16 @@ class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
                 null,
                 this.props.todos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
                     'li',
-                    { key: todo.id },
+                    { key: todo.id,
+                        onClick: () => {
+                            store.dispatch({
+                                type: 'TOGGLE_TODO',
+                                id: todo.id
+                            });
+                        },
+                        style: {
+                            textDecoration: todo.completed ? 'line-through' : 'none'
+                        } },
                     todo.text
                 ))
             )
