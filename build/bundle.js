@@ -662,6 +662,33 @@ const FilterLink = ({
     );
 };
 
+const Todo = ({
+    onClick,
+    completed,
+    text
+}) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+    'li',
+    {
+        onClick: onClick,
+        style: {
+            textDecoration: completed ? 'line-through' : 'none'
+        } },
+    text
+);
+
+const TodoList = ({
+    todos,
+    onTodoClick
+}) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+    'ul',
+    null,
+    todos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Todo, _extends({
+        key: todo.id
+    }, todo, {
+        onClick: () => onTodoClick(todo.id)
+    })))
+);
+
 const getVisibleTodos = (todos, filter) => {
     switch (filter) {
         case 'SHOW_ALL':
@@ -698,24 +725,12 @@ class TodoApp extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
                     } },
                 'Add Todo'
             ),
-            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-                'ul',
-                null,
-                visibleTodos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-                    'li',
-                    { key: todo.id,
-                        onClick: () => {
-                            store.dispatch({
-                                type: 'TOGGLE_TODO',
-                                id: todo.id
-                            });
-                        },
-                        style: {
-                            textDecoration: todo.completed ? 'line-through' : 'none'
-                        } },
-                    todo.text
-                ))
-            ),
+            __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(TodoList, {
+                todos: visibleTodos,
+                onTodoClick: id => store.dispatch({
+                    type: 'TOGGLE_TODO',
+                    id
+                }) }),
             __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
                 'p',
                 null,
