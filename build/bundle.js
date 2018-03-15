@@ -1991,32 +1991,42 @@ const todos = (state = [], action) => {
     }
 };
 
-const Todo = ({
-    onClick,
-    completed,
-    text
-}) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-    'li',
-    {
-        onClick: onClick,
-        style: {
-            textDecoration: completed ? 'line-through' : 'none'
-        } },
-    text
-);
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+    switch (action.type) {
+        case 'SET_VISIBILITY_FILTER':
+            return action.filter;
+        default:
+            return state;
+    }
+};
 
-const TodoList = ({
+const todoApp = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["b" /* combineReducers */])({
     todos,
-    onTodoClick
-}) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-    'ul',
-    null,
-    todos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Todo, _extends({
-        key: todo.id
-    }, todo, {
-        onClick: () => onTodoClick(todo.id)
-    })))
-);
+    visibilityFilter
+});
+
+let nextTodoId = 0;
+const addTodo = text => {
+    return {
+        type: 'ADD_TODO',
+        id: nextTodoId++,
+        text
+    };
+};
+
+const toggleTodo = id => {
+    return {
+        type: 'TOGGLE_TODO',
+        id
+    };
+};
+
+const setVisibilityFilter = filter => {
+    return {
+        type: 'SET_VISIBILITY_FILTER',
+        filter
+    };
+};
 
 const Link = ({
     active,
@@ -2052,10 +2062,7 @@ const mapStateToLinkProps = (state, ownProps) => {
 const mapDispatchToLinkProps = (dispatch, ownProps) => {
     return {
         onClick: () => {
-            dispatch({
-                type: 'SET_VISIBILITY_FILTER',
-                filter: ownProps.filter
-            });
+            dispatch(setVisibilityFilter(ownProps.filter));
         }
     };
 };
@@ -2094,21 +2101,33 @@ const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement
     )
 );
 
-const visibilityFilter = (state = 'SHOW_ALL', action) => {
-    switch (action.type) {
-        case 'SET_VISIBILITY_FILTER':
-            return action.filter;
-        default:
-            return state;
-    }
-};
+const Todo = ({
+    onClick,
+    completed,
+    text
+}) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+    'li',
+    {
+        onClick: onClick,
+        style: {
+            textDecoration: completed ? 'line-through' : 'none'
+        } },
+    text
+);
 
-const todoApp = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["b" /* combineReducers */])({
+const TodoList = ({
     todos,
-    visibilityFilter
-});
+    onTodoClick
+}) => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+    'ul',
+    null,
+    todos.map(todo => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(Todo, _extends({
+        key: todo.id
+    }, todo, {
+        onClick: () => onTodoClick(todo.id)
+    })))
+);
 
-let nextTodoId = 0;
 let AddTodo = ({ dispatch }) => {
     let input;
     return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
@@ -2120,11 +2139,7 @@ let AddTodo = ({ dispatch }) => {
         __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
             'button',
             { onClick: () => {
-                    dispatch({
-                        type: 'ADD_TODO',
-                        id: nextTodoId++,
-                        text: input.value
-                    });
+                    dispatch(addTodo(input.value));
                     input.value = '';
                 } },
             'Add Todo'
@@ -2152,10 +2167,9 @@ const mapStateToTodoListProps = state => {
 };
 const mapDispatchToTodoListProps = dispatch => {
     return {
-        onTodoClick: id => dispatch({
-            type: "TOGGLE_TODO",
-            id
-        })
+        onTodoClick: id => {
+            dispatch(toggleTodo(id));
+        }
     };
 };
 const VisibleTodoList = Object(__WEBPACK_IMPORTED_MODULE_5_react_redux__["b" /* connect */])(mapStateToTodoListProps, mapDispatchToTodoListProps)(TodoList);
