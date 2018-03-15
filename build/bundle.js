@@ -1959,8 +1959,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 
 
-let nextTodoId = 0;
-
 const todo = (state, action) => {
     switch (action.type) {
         case 'ADD_TODO':
@@ -2019,41 +2017,6 @@ const TodoList = ({
         onClick: () => onTodoClick(todo.id)
     })))
 );
-
-let AddTodo = ({ dispatch }) => {
-    let input;
-    return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-        'div',
-        null,
-        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement('input', { ref: node => {
-                input = node;
-            } }),
-        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-            'button',
-            { onClick: () => {
-                    dispatch({
-                        type: 'ADD_TODO',
-                        id: nextTodoId,
-                        text: input.value
-                    });
-                    input.value = '';
-                } },
-            'Add Todo'
-        )
-    );
-};
-AddTodo = Object(__WEBPACK_IMPORTED_MODULE_5_react_redux__["b" /* connect */])()(AddTodo);
-
-const getVisibleTodos = (todos, filter) => {
-    switch (filter) {
-        case 'SHOW_ALL':
-            return todos;
-        case 'SHOW_COMPLETED':
-            return todos.filter(t => t.completed);
-        case 'SHOW_ACTIVE':
-            return todos.filter(t => !t.completed);
-    }
-};
 
 const Link = ({
     active,
@@ -2157,14 +2120,49 @@ const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement
     )
 );
 
-const mapStateToProps = state => {
+let nextTodoId = 0;
+let AddTodo = ({ dispatch }) => {
+    let input;
+    return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+        'div',
+        null,
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement('input', { ref: node => {
+                input = node;
+            } }),
+        __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
+            'button',
+            { onClick: () => {
+                    dispatch({
+                        type: 'ADD_TODO',
+                        id: nextTodoId++,
+                        text: input.value
+                    });
+                    input.value = '';
+                } },
+            'Add Todo'
+        )
+    );
+};
+AddTodo = Object(__WEBPACK_IMPORTED_MODULE_5_react_redux__["b" /* connect */])()(AddTodo);
+
+const getVisibleTodos = (todos, filter) => {
+    switch (filter) {
+        case 'SHOW_ALL':
+            return todos;
+        case 'SHOW_COMPLETED':
+            return todos.filter(t => t.completed);
+        case 'SHOW_ACTIVE':
+            return todos.filter(t => !t.completed);
+    }
+};
+
+const mapStateToTodoListProps = state => {
     return {
         todos: getVisibleTodos(state.todos, state.visibilityFilter)
 
     };
 };
-
-const mapDispatchToProps = dispatch => {
+const mapDispatchToTodoListProps = dispatch => {
     return {
         onTodoClick: id => dispatch({
             type: "TOGGLE_TODO",
@@ -2172,7 +2170,7 @@ const mapDispatchToProps = dispatch => {
         })
     };
 };
-const VisibleTodoList = Object(__WEBPACK_IMPORTED_MODULE_5_react_redux__["b" /* connect */])(mapStateToProps, mapDispatchToProps)(TodoList);
+const VisibleTodoList = Object(__WEBPACK_IMPORTED_MODULE_5_react_redux__["b" /* connect */])(mapStateToTodoListProps, mapDispatchToTodoListProps)(TodoList);
 
 const TodoApp = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
     'div',
