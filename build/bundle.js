@@ -2042,51 +2042,25 @@ const Link = ({
     );
 };
 
-class FilterLink extends __WEBPACK_IMPORTED_MODULE_1_react__["Component"] {
-    componentDidMount() {
-        const { store } = this.context;
-        this.unsubscribe = store.subscribe(() => this.forceUpdate());
-    }
+const mapStateToLinkProps = (state, ownProps) => {
+    return {
+        active: ownProps.filter === state.visibilityFilter
 
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    render() {
-        const props = this.props;
-        const { store } = this.context;
-        const state = store.getState();
-
-        return __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
-            Link,
-            {
-                active: props.filter === state.visibilityFilter,
-                onClick: () => store.dispatch({
-                    type: 'SET_VISIBILITY_FILTER',
-                    filter: props.filter
-                })
-            },
-            props.children
-        );
-    }
-}
-FilterLink.contextTypes = {
-    store: __WEBPACK_IMPORTED_MODULE_1_react___default.a.PropTypes.object
+    };
 };
 
-const visibilityFilter = (state = 'SHOW_ALL', action) => {
-    switch (action.type) {
-        case 'SET_VISIBILITY_FILTER':
-            return action.filter;
-        default:
-            return state;
-    }
+const mapDispatchToLinkProps = (dispatch, ownProps) => {
+    return {
+        onClick: () => {
+            dispatch({
+                type: 'SET_VISIBILITY_FILTER',
+                filter: ownProps.filter
+            });
+        }
+    };
 };
 
-const todoApp = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["b" /* combineReducers */])({
-    todos,
-    visibilityFilter
-});
+const FilterLink = Object(__WEBPACK_IMPORTED_MODULE_5_react_redux__["b" /* connect */])(mapStateToLinkProps, mapDispatchToLinkProps)(Link);
 
 const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement(
     'p',
@@ -2119,6 +2093,20 @@ const Footer = () => __WEBPACK_IMPORTED_MODULE_1_react___default.a.createElement
         'Completed'
     )
 );
+
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+    switch (action.type) {
+        case 'SET_VISIBILITY_FILTER':
+            return action.filter;
+        default:
+            return state;
+    }
+};
+
+const todoApp = Object(__WEBPACK_IMPORTED_MODULE_3_redux__["b" /* combineReducers */])({
+    todos,
+    visibilityFilter
+});
 
 let nextTodoId = 0;
 let AddTodo = ({ dispatch }) => {
